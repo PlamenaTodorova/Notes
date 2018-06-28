@@ -1,0 +1,147 @@
+﻿<Window x:Class="NotesCreator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:model="clr-namespace:Models"
+        xmlns:commands="clr-namespace:NotesCreator.Commands"
+        mc:Ignorable="d"
+        Title="MainWindow"
+        WindowState="Maximized"
+        Background="LightGray"
+        FontSize="15">
+
+    <Window.CommandBindings>
+        <CommandBinding 
+            Command="commands:New.NewNote"  
+            Executed="NewNote_Executed" 
+            CanExecute="NewNote_CanExecute" />
+        <CommandBinding 
+            Command="commands:New.NewTopic"  
+            Executed="NewTopic_Executed" 
+            CanExecute="NewTopic_CanExecute" />
+    </Window.CommandBindings>
+
+    <StackPanel>
+        <!--Menu-->
+        <DockPanel>
+            <StackPanel 
+                DockPanel.Dock="Top" 
+                Orientation="Horizontal">
+
+                <Button 
+                    Margin="10"
+                    Command="commands:New.NewNote"
+                    Content="New Note"/>
+                <Button 
+                    Margin="10" 
+                    Command="commands:New.NewTopic"
+                    Content="New Topic"/>
+            </StackPanel>
+        </DockPanel>
+
+        <Grid>
+            <Grid.Resources>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="IsExpanded" Value="True"/>
+                </Style>    
+            </Grid.Resources>
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="5*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Column 1-->
+            <!-- Tree view-->
+            <TreeView Grid.Column="0" Name="CategoryTree">
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate 
+                        DataType="x:Type model:TopicViewModel" 
+                        ItemsSource="{Binding SubDirectories}">
+
+                        <Button
+                            BorderThickness="0"
+                            Background="White"
+                            Click="TopicGotFocus"
+                            Content="{Binding Name}"/>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+            <!--Splitter-->
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+
+            <!--Column 2-->
+            <!--Main Container-->
+
+            <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
+                <ItemsControl Name="notesContainer">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="2"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border 
+                                Margin="5"
+                                CornerRadius="6"
+                                BorderThickness="1"
+                                BorderBrush="Gray"
+                                Background="LightGoldenrodYellow">
+                                
+                                <StackPanel 
+                                    Margin="10"
+                                    Background="LightGoldenrodYellow">
+
+                                    <Border BorderThickness="0 0 0 1" BorderBrush="Black">
+                                        
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBox
+                                            Grid.Column="0"
+                                            HorizontalAlignment="Left"
+                                            Margin="5"
+                                            FontSize="18"
+                                            FontStyle="Oblique"
+                                            Text="{Binding Title}"
+                                            Background="LightGoldenrodYellow"
+                                            BorderThickness="0"/>
+
+                                        <Menu
+                                            Grid.Column="1"
+                                            HorizontalAlignment="Right"
+                                            Background="LightGoldenrodYellow"
+                                            FontSize="25">
+                                            
+                                            <MenuItem Header="...">
+                                                <MenuItem Header="_RelocateNote"/>
+                                                <MenuItem Header="_DeleteNote"/>
+                                            </MenuItem>
+                                        </Menu>
+                                    </Grid>
+                                    </Border>
+                                    <TextBox
+                                        Margin="10"
+                                        AcceptsReturn="True"
+                                        AcceptsTab="True"
+                                        Text="{Binding NoteText}"
+                                        Background="LightGoldenrodYellow"
+                                        BorderThickness="0"
+                                        LostFocus="NoteLostFocus"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </StackPanel>
+</Window>
