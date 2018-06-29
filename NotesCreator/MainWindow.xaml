@@ -123,8 +123,9 @@
                                             FontSize="25">
                                             
                                             <MenuItem Header="...">
-                                                <MenuItem Header="_RelocateNote"/>
-                                                <MenuItem Header="_DeleteNote"/>
+                                                <MenuItem Header="RelocateNote"/>
+                                                <MenuItem Header="DeleteNote"
+                                                          Click="DeleteNote"/>
                                             </MenuItem>
                                         </Menu>
                                     </Grid>
