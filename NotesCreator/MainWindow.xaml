@@ -114,7 +114,7 @@
                                             Text="{Binding Title}"
                                             Background="LightGoldenrodYellow"
                                             BorderThickness="0"
-                                            TextChanged="RenameNote"/>
+                                            LostFocus="RenameNote"/>
 
                                         <Menu
                                             Grid.Column="1"
@@ -136,7 +136,7 @@
                                         Text="{Binding NoteText}"
                                         Background="LightGoldenrodYellow"
                                         BorderThickness="0"
-                                        TextChanged="NoteEdited"/>
+                                        LostFocus="NoteEdited"/>
                                 </StackPanel>
                             </Border>
                         </DataTemplate>
