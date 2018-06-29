@@ -103,5 +103,19 @@ namespace Instruments
                 return false;
             }
         }
+        
+        public bool DeleteNote(int id)
+        {
+            try
+            {
+                notesGenerator.RemoveNote(id);
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }
