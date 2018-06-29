@@ -157,7 +157,22 @@ namespace Notes
         #endregion
 
         #region DeleteNote
-        //TO DO
+        public void RemoveNote(int id)
+        {
+            NoteViewModel currentNote = notes.FirstOrDefault(e => e.Id == id);
+            Note currentNoteInfo = notesInfo.FirstOrDefault(e => e.Id == id);
+
+            if (currentNote == null)
+                throw new Exception("No such note found");
+
+            File.Delete(currentNoteInfo.Path);
+
+            notes.Remove(currentNote);
+            notesInfo.Remove(currentNoteInfo);
+
+            //Safe things after work is done
+            WriteNoteList();
+        }
         #endregion
 
         #region MoveNote
