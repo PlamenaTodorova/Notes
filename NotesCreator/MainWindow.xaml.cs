@@ -1,4 +1,4 @@
-﻿using Instruments;
+using Instruments;
 using Topics;
 using System;
 using System.Collections.Generic;
@@ -98,19 +98,31 @@ namespace NotesCreator
 
         #endregion
 
-        private void NoteLostFocus(object sender, RoutedEventArgs e)
+        private void NoteEdited(object sender, RoutedEventArgs e)
         {
-            string notesTitle = ((TextBox)((Grid)((Border)((StackPanel)
-                ((TextBox)sender).Parent).Children[0]).Child).Children[0]).Text;
+            int noteId = int.Parse(((TextBlock)((StackPanel)
+                ((TextBox)sender).Parent).Children[0]).Text);
 
-            if (!engin.ModifyNoteText(notesTitle))
+            if (!engin.ModifyNoteText(noteId))
             {
                 MessageBox.Show("A problem occured while saving the note. There might be problem with the note's file");
             }
             
         }
 
-        private void TopicGotFocus(object sender, RoutedEventArgs e)
+        private void RenameNote(object sender, RoutedEventArgs e)
+        {
+            int noteId = int.Parse(((TextBlock)((StackPanel)((Border)((Grid)
+                ((TextBox)sender).Parent).Parent).Parent).Children[0]).Text);
+
+            if (!engin.RenameNote(noteId))
+            {
+                MessageBox.Show("A problem occured while saving the note. There might be problem with the note's file");
+            }
+
+        }
+
+        private void TopicPicked(object sender, RoutedEventArgs e)
         {
             string topic = ((Button)sender).Content.ToString();
 
