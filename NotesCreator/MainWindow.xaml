@@ -133,6 +133,7 @@
                                         Margin="10"
                                         AcceptsReturn="True"
                                         AcceptsTab="True"
+                                        TextWrapping="Wrap"
                                         Text="{Binding NoteText}"
                                         Background="LightGoldenrodYellow"
                                         BorderThickness="0"
