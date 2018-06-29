@@ -121,6 +121,20 @@ namespace NotesCreator
             }
 
         }
+        
+        private void DeleteNote(object sender, RoutedEventArgs e)
+        {
+            int noteId = int.Parse(((TextBlock)((StackPanel)((Border)((Grid)
+                ((Menu)((MenuItem)((MenuItem)sender).Parent).Parent).Parent)
+                .Parent).Parent).Children[0]).Text);
+
+            
+            if (!engin.DeleteNote(noteId))
+            {
+                MessageBox.Show("The note couldn't be delete or has already been remove.");
+            }
+
+        }
 
         private void TopicPicked(object sender, RoutedEventArgs e)
         {
