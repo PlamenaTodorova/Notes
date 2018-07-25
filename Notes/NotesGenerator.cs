@@ -1,10 +1,11 @@
-﻿using Models;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using System.IO;
 using System.Collections.ObjectModel;
+using System.Threading;
 
 namespace Notes
 {
@@ -35,7 +36,7 @@ namespace Notes
         private List<Note> GetNotesList()
         {
             List<Note> list = new List<Note>();
-            string path = GetNotesFilePath();
+            string path = GetNotesCollectionPath();
             if (File.Exists(path))
             {
                 string json = File.ReadAllText(path);
@@ -52,9 +53,9 @@ namespace Notes
             return list;
         }
 
-        private void WriteNoteList(List<Note> notes)
+        private void WriteNoteList()
         {
-            File.WriteAllText(GetNotesFilePath(), JsonConvert.SerializeObject(notes));
+            File.WriteAllText(GetNotesCollectionPath(), JsonConvert.SerializeObject(notesInfo));
         }
         #endregion
 
@@ -90,16 +91,18 @@ namespace Notes
         public void AddNote()
         {
             //Find how many notes there are with the title "New note"(Standart title name)
-            int count = notesInfo.Where(e => e.Title.StartsWith(StandartTitle)).Count();
+            int countOfStandarNamedNotes = notesInfo.Where(e => e.Title.StartsWith(StandartTitle)).Count();
+            int count = notesInfo.Count();
 
             //Create new note
-            Note newNote = new Note(count);
+            Note newNote = new Note(count, countOfStandarNamedNotes);
 
             string newNoteLocation = location + "\\" + newNote.Title + NotesFileExtension;
             newNote.Path = newNoteLocation;
 
             NoteViewModel newNoteModel = new NoteViewModel()
             {
+                Id = newNote.Id,
                 Title = newNote.Title,
                 NoteText = ""
             };
@@ -112,7 +115,7 @@ namespace Notes
             notes.Add(newNoteModel);
 
             //Update the file
-            WriteNoteList(notesInfo);
+            WriteNoteList();
         }
         #endregion
 
@@ -120,15 +123,32 @@ namespace Notes
         //TO DO
 
         #region RenemeNote
-        //TO DO
+        public void RenameNote(int id)
+        {
+            NoteViewModel currentNote = notes.FirstOrDefault(e => e.Id == id);
+            Note currentNoteInfo = notesInfo.FirstOrDefault(e => e.Id == id);
+
+            if (currentNote == null)
+                throw new Exception("No such note found");
+
+            string newName = GetNoteFilePath(currentNote);
+            
+            File.Move(currentNoteInfo.Path, newName);
+            Thread.Sleep(1000);
+
+            File.Delete(currentNoteInfo.Path);
+            currentNoteInfo.Path = newName;
+            currentNoteInfo.Title = currentNote.Title;
+            WriteNoteList();
+        }
         #endregion
 
         #region ChangeText
-        public void UpdateText(string title)
+        public void UpdateText(int id)
         {
-            NoteViewModel currentNote = notes.FirstOrDefault(e => e.Title == title);
-            Note currentNoteInfo = notesInfo.FirstOrDefault(e => e.Title == title);
-
+            NoteViewModel currentNote = notes.FirstOrDefault(e => e.Id == id);
+            Note currentNoteInfo = notesInfo.FirstOrDefault(e => e.Id == id);
+            
             if (currentNote == null)
                 throw new Exception("No such note found");
 
@@ -137,7 +157,22 @@ namespace Notes
         #endregion
 
         #region DeleteNote
-        //TO DO
+        public void RemoveNote(int id)
+        {
+            NoteViewModel currentNote = notes.FirstOrDefault(e => e.Id == id);
+            Note currentNoteInfo = notesInfo.FirstOrDefault(e => e.Id == id);
+
+            if (currentNote == null)
+                throw new Exception("No such note found");
+
+            File.Delete(currentNoteInfo.Path);
+
+            notes.Remove(currentNote);
+            notesInfo.Remove(currentNoteInfo);
+
+            //Safe things after work is done
+            WriteNoteList();
+        }
         #endregion
 
         #region MoveNote
@@ -146,11 +181,16 @@ namespace Notes
 
         #endregion
 
-        private string GetNotesFilePath()
+        private string GetNotesCollectionPath()
         {
             string name = location.Substring(location.LastIndexOf('\\'));
 
             return location + name + NotesInfoFileExtension;
+        }
+
+        private string GetNoteFilePath(NoteViewModel note)
+        {
+            return location + '\\' + note.Title + NotesFileExtension;
         }
     }
 }

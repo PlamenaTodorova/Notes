@@ -8,8 +8,10 @@ namespace Notes
 {
     public class Note
     {
-        public Note(int number)
+        public Note(int id, int number)
         {
+            this.Id = id;
+
             this.Title = "New note";
 
             if (number != 0)
@@ -17,6 +19,8 @@ namespace Notes
                 this.Title += "(" + number + ")";
             }
         }
+
+        public int Id { get; set; }
 
         public string Title { get; set; }
 

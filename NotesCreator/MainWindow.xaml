@@ -1,4 +1,4 @@
-﻿<Window x:Class="NotesCreator.MainWindow"
+<Window x:Class="NotesCreator.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -64,7 +64,7 @@
                         <Button
                             BorderThickness="0"
                             Background="White"
-                            Click="TopicGotFocus"
+                            Click="TopicPicked"
                             Content="{Binding Name}"/>
                     </HierarchicalDataTemplate>
                 </TreeView.ItemTemplate>
@@ -95,10 +95,11 @@
                                 <StackPanel 
                                     Margin="10"
                                     Background="LightGoldenrodYellow">
+                                    <TextBlock Text="{Binding Id}"
+                                               Visibility="Hidden"/>
 
                                     <Border BorderThickness="0 0 0 1" BorderBrush="Black">
-                                        
-                                    <Grid>
+                                        <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="5*" />
                                             <ColumnDefinition Width="*" />
@@ -112,7 +113,8 @@
                                             FontStyle="Oblique"
                                             Text="{Binding Title}"
                                             Background="LightGoldenrodYellow"
-                                            BorderThickness="0"/>
+                                            BorderThickness="0"
+                                            LostFocus="RenameNote"/>
 
                                         <Menu
                                             Grid.Column="1"
@@ -121,8 +123,9 @@
                                             FontSize="25">
                                             
                                             <MenuItem Header="...">
-                                                <MenuItem Header="_RelocateNote"/>
-                                                <MenuItem Header="_DeleteNote"/>
+                                                <MenuItem Header="RelocateNote"/>
+                                                <MenuItem Header="DeleteNote"
+                                                          Click="DeleteNote"/>
                                             </MenuItem>
                                         </Menu>
                                     </Grid>
@@ -131,10 +134,11 @@
                                         Margin="10"
                                         AcceptsReturn="True"
                                         AcceptsTab="True"
+                                        TextWrapping="Wrap"
                                         Text="{Binding NoteText}"
                                         Background="LightGoldenrodYellow"
                                         BorderThickness="0"
-                                        LostFocus="NoteLostFocus"/>
+                                        LostFocus="NoteEdited"/>
                                 </StackPanel>
                             </Border>
                         </DataTemplate>

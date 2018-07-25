@@ -1,4 +1,4 @@
-﻿using Topics;
+using Topics;
 using System;
 using System.Collections.Generic;
 using Models;
@@ -76,11 +76,39 @@ namespace Instruments
             }
         }
 
-        public bool ModifyNoteText(string title)
+        public bool RenameNote(int id)
         {
             try
             {
-                notesGenerator.UpdateText(title);
+                notesGenerator.RenameNote(id);
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public bool ModifyNoteText(int id)
+        {
+            try
+            {
+                notesGenerator.UpdateText(id);
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        
+        public bool DeleteNote(int id)
+        {
+            try
+            {
+                notesGenerator.RemoveNote(id);
 
                 return true;
             }
